@@ -20,5 +20,5 @@ jobs:
       - uses: docker/build-push-action@v4
         with:
           push: true
-          file: Dockerfile-cuda
+          file: Dockerfile-intel
           tags: ghcr.io/${{ github.repository_owner }}/stash-intel

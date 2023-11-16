@@ -2,15 +2,16 @@ FROM stashapp/stash as stash
 
 FROM alpine as build
 RUN apk add ca-certificates wget
+WORKDIR /tmp
 RUN mkdir -p \
         /patched-lib && \
-    wget -O /bin/patch.sh \
+    wget -O /tmp/patch.sh \
         https://raw.githubusercontent.com/keylase/nvidia-patch/master/patch.sh && \
-    wget -O /bin/docker-entrypoint.sh \
+    wget -O /tmp/docker-entrypoint.sh \
         https://raw.githubusercontent.com/keylase/nvidia-patch/master/docker-entrypoint.sh && \
     chmod +x \
-        /bin/patch.sh \
-        /bin/docker-entrypoint.sh \
+        /tmp/patch.sh \
+        /tmp/docker-entrypoint.sh \
 
 # Final Runnable Image
 FROM nvidia/cuda:12.0.1-base-ubuntu22.04
@@ -27,7 +28,7 @@ RUN apt update && \
 RUN mkdir -p \
         /usr/local/bin \
         /patched-lib && \
-COPY --from=build /bin /usr/local/bin/
+COPY --from=build /tmp /usr/local/bin/
 
 # pip packages
 RUN pip3 install \
