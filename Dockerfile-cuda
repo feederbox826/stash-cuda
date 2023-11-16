@@ -1,18 +1,25 @@
 FROM stashapp/stash as stash
 
+FROM alpine as build
+RUN apk add ca-certificates wget
+RUN mkdir -p \
+        /patched-lib && \
+    wget -O /bin/patch.sh \
+        https://raw.githubusercontent.com/keylase/nvidia-patch/master/patch.sh && \
+    wget -O /bin/docker-entrypoint.sh \
+        https://raw.githubusercontent.com/keylase/nvidia-patch/master/docker-entrypoint.sh && \
+    chmod +x \
+        /bin/patch.sh \
+        /bin/docker-entrypoint.sh \
+
 # Final Runnable Image
 FROM nvidia/cuda:12.0.1-base-ubuntu22.04
 
 COPY --from=stashapp/stash /usr/bin/stash /usr/bin/
 RUN apt update && \
-    apt upgrade -y && \
     apt install -y \
-        ca-certificates \
         libvips-tools \
         ffmpeg \
-        wget \
-        i965-va-driver-shaders \
-        vainfo \
         python3-pip && \
     rm -rf /var/lib/apt/lists/*
 
@@ -20,14 +27,7 @@ RUN apt update && \
 RUN mkdir -p \
         /usr/local/bin \
         /patched-lib && \
-    wget -O /usr/local/bin/patch.sh \
-        https://raw.githubusercontent.com/keylase/nvidia-patch/master/patch.sh && \
-    wget -O /usr/local/bin/docker-entrypoint.sh \
-        https://raw.githubusercontent.com/keylase/nvidia-patch/master/docker-entrypoint.sh && \
-    chmod +x \
-        /usr/local/bin/patch.sh \
-        /usr/local/bin/docker-entrypoint.sh \
-        /usr/bin/stash
+COPY --from=build /bin /usr/local/bin/
 
 # pip packages
 RUN pip3 install \
