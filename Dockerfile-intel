@@ -12,6 +12,7 @@ RUN apt update && \
 
 # pip packages
 RUN pip3 install \
+    --break-system-packages \
     requests \
     bs4 \
     lxml \
