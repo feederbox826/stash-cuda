@@ -27,7 +27,7 @@ RUN apt update && \
 # NVENC Patch
 RUN mkdir -p \
         /usr/local/bin \
-        /patched-lib && \
+        /patched-lib
 COPY --from=build /tmp /usr/local/bin/
 
 # pip packages
