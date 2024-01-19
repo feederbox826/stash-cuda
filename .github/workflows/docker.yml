@@ -3,6 +3,7 @@ on:
   push:
     paths:
       - Dockerfile
+      - VERSION
   workflow_dispatch:
   schedule:
     - cron: '0 0 1 * *'
