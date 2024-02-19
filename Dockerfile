@@ -9,7 +9,8 @@ RUN apk add --no-cache \
         bs4 \
         lxml \
         pystashlib \
-        stashapp-tools
+        stashapp-tools \
+        emojis
 
 ENV STASH_CONFIG_FILE=/root/.stash/config.yml
 EXPOSE 9999
