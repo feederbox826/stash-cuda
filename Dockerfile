@@ -2,7 +2,7 @@ FROM alpine:latest
 COPY --from=stashapp/stash /usr/bin/stash /usr/bin/
 
 RUN apk add --no-cache \
-        ca-certificates vips-tools ffmpeg python3 py3-pip && \
+        ca-certificates vips-tools ffmpeg python3-full py3-pip && \
     pip3 install \
         --break-system-packages \
         requests \
